@@ -23,17 +23,17 @@ public class Laser
 
     public static void createLaser(Laser laser, Laser laser2, Random random, int boardBreite, int boardLaenge, Character player1, int laseranzahl) //alle Laser außer der 1.
     {
+        //definieren der Laserbreite und Laserlänge
+        laser.breite = random.nextInt(5, 10);
+        laser.laenge = random.nextInt(50, boardLaenge-100);
+
         //definieren des Laserbereichs
         laser.laserbereichsstart = laser2.laserbereichsende;
         laser.laserbereichsende = laser.laserbereichsstart + ((boardBreite-(player1.x + player1.breite + 20))/laseranzahl);
 
         //definieren der Laserposition
-        laser.x = random.nextInt(laser2.laserbereichsstart, laser2.laserbereichsende);
+        laser.x = random.nextInt(laser.laserbereichsstart, laser.laserbereichsende-laser.breite);
         laser.y = random.nextInt(10, boardLaenge-300);
-
-        //definieren der Laserbreite und Laserlänge
-        laser.breite = random.nextInt(5, 10);
-        laser.laenge = random.nextInt(50, boardLaenge-50);
 
         //festsetzen der Bewegungsrichtung
         if(laser2.movingDirection == 1)
@@ -44,18 +44,17 @@ public class Laser
         {
             laser.movingDirection = 1;
         }
-
     }
 
-    public static void createLaser(Laser laser, Random random, int breite, int laenge, Character player1, int laseranzahl) //der 1. Laser
+    public static void createLaser(Laser laser, Random random, int boardBreite, int boardLaenge, Character player1, int laseranzahl) //der 1. Laser
     {
+        laser.breite = random.nextInt(5, 10);
+        laser.laenge = random.nextInt(50, boardLaenge-100);
         laser.laserbereichsstart = player1.x + player1.breite + 20;
-        laser.laserbereichsende = laser.laserbereichsstart + ((breite-(player1.x + player1.breite + 20))/laseranzahl);
+        laser.laserbereichsende = laser.laserbereichsstart + ((boardBreite-(player1.x + player1.breite + 20))/laseranzahl);
 
         laser.x = random.nextInt(laser.laserbereichsstart, laser.laserbereichsende);
-        laser.y = random.nextInt(10, laenge-300);
-        laser.breite = random.nextInt(5, 10);
-        laser.laenge = random.nextInt(50, laenge-100);
+        laser.y = random.nextInt(10, boardLaenge-300);
 
         laser.movingDirection = 1;
     }
@@ -90,10 +89,8 @@ public class Laser
         return collision;
     }
 
-    public static int laserpassed (Character player1, List<Laser> lasers, int laseranzahl) //gibt die Anzahl an passierten Lasern zurück
+    public static String laserpassed (Character player1, List<Laser> lasers, int laseranzahl, int laspass) //gibt die Anzahl an passierten Lasern zurück
     {
-        int laspass = 0;
-
         //Prüfung der passierten Laser
         for(int i = 0; i < laseranzahl; i++)
         {
@@ -103,7 +100,7 @@ public class Laser
                 System.out.println(laspass);
             }
         }
-        return laspass;
+        return String.valueOf(laspass);
     }
 
 }

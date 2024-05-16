@@ -8,7 +8,7 @@ public class PostRequest
         try
         {
             // URL und Verbindung vorbereiten
-            URL url = new URL("http://192.168.213.6:5000/set-game/Lasergame");
+            URL url = new URL("http://127.0.0.1:5000/set-game/Lasergame");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             // Anforderungsmethode auf POST setzen

@@ -1,5 +1,7 @@
 package lasergame;
 
+import java.util.ArrayList;
+
 public class PowerUp
 {
 
@@ -7,8 +9,8 @@ public class PowerUp
     private int x;
     private int y;
     //Größe
-    private int laenge = 10;
-    private int breite = 10;
+    private int laenge = 20;
+    private int breite = 20;
 
     PowerUp (int x, int y) //Constructor
     {
@@ -36,10 +38,10 @@ public class PowerUp
         this.y = y;
     }
 
-    public static boolean collisionPowerUp(PowerUp newPow, Character player) //Kollision mit PowerUp
+    public static boolean collisionPowerUp(PowerUp pow, Character player) //Kollision mit PowerUp
     {
         //player berührt PowerUp
-        return  (player.x + player.breite >= newPow.getX() && player.x <= newPow.getX() + newPow.getBreite()) &&
-                (player.y + player.laenge >= newPow.getY() && player.y <= newPow.getLaenge() + newPow.getY());
+        return  (player.x + player.breite >= pow.getX() && player.x <= pow.getX() + pow.getBreite()) &&
+                (player.y + player.laenge >= pow.getY() && player.y <= pow.getLaenge() + pow.getY());
     }
 }
