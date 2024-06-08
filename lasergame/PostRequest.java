@@ -27,7 +27,7 @@ public class PostRequest
             // Verbindung schließen
             conn.disconnect();
         }
-        catch (Exception e)
+        catch (Exception e) //Ausnahme, wenn etwas schief läuft
         {
             e.printStackTrace();
         }

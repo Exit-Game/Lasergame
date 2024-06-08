@@ -3,32 +3,90 @@ package lasergame;
 public class Character
 {
     //Position
-    int x;
-    int y;
+    private int x;
+    private int y;
 
     //Größe
-    final int laenge = 25;
-    final int breite = 10;
+    private final int length = 25;
+    private final int width = 10;
 
     //Bewegung
-    int speed;
-    int bewegungX;
-    int bewegungY;
+    private int speed;
+    private int movementX;
+    private int movementY;
 
-    public int getBreite() {
-        return breite;
+    //PowerUp
+    private int shield;
+
+    //Getter/Setter zum Ändern und Abfragen von Werten dieser Klasse
+    public void setMovementY(int movementY)
+    {
+        this.movementY = movementY;
     }
 
-    public int getLaenge() {
-        return laenge;
+    public void setMovementX(int movementX)
+    {
+        this.movementX = movementX;
     }
 
-    public int getY() {
+    public void setShield(int shield)
+    {
+        this.shield = shield;
+    }
+
+    public int getShield()
+    {
+        return shield;
+    }
+
+    public int getLength()
+    {
+        return length;
+    }
+
+    public int getWidth()
+    {
+        return width;
+    }
+
+    public int getSpeed()
+    {
+        return speed;
+    }
+
+    public int getMovementX()
+    {
+        return movementX;
+    }
+
+    public int getMovementY()
+    {
+        return movementY;
+    }
+
+    public void setSpeed(int speed)
+    {
+        this.speed = speed;
+    }
+
+    public int getX()
+    {
+        return x;
+    }
+
+    public int getY()
+    {
         return y;
     }
 
-    public int getX() {
-        return x;
+    public void setX(int x)
+    {
+        this.x = x;
+    }
+
+    public void setY(int y)
+    {
+        this.y = y;
     }
 
     Character(int x, int y, int speed) //Constructor zum Erstellen eines Charakters

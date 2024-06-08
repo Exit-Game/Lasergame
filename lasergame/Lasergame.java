@@ -6,63 +6,61 @@ import java.util.ArrayList; //Laser erstellen
 import java.util.List;
 import java.util.Random; // Laser placen
 import javax.swing.*;
-import javax.xml.transform.stream.StreamSource;
 
 public class Lasergame extends JPanel implements ActionListener, KeyListener
 {
 	//gameBoard
-	int breite;
-	int laenge;
+	private final int width;
+	private final int length;
 	
 	//gamelogic
-    static Timer gameLoop;
-	boolean gameOver = false;
-	boolean win = false;
-	int level = 1;
+    private static Timer gameLoop;
+	private boolean gameOver = false;
+	private boolean win = false;
+	private int level = 1;
 	
 	//Laser
-	Random random;
-	int laseranzahl;
-	List<Laser> lasers = new ArrayList<>();
-	int laspass;
-	String laspass1;
+	private final Random random;
+	private int laserNumber;
+	private List<Laser> lasers = new ArrayList<>();
+	private int laspass;
+	private String laspassstri;
 	
 	//player
-	Character player1;
+	private Character player1;
 	
 	//PowerUp
-	PowerUp newPow;
-	List<PowerUp> powerUps = new ArrayList<>();
+	private PowerUp newPow;
 
 	Lasergame (int boardHeight, int boardLength, int laseranzahl2)
 	{
 		//gameSettings
-		this.laseranzahl = laseranzahl2;
-		this.breite = boardHeight;
-		this.laenge = boardLength;
-		setPreferredSize(new Dimension(this.breite, this.laenge));
+		this.laserNumber = laseranzahl2;
+		this.width = boardHeight;
+		this.length = boardLength;
+		setPreferredSize(new Dimension(this.width, this.length));
 		setBackground(Color.GRAY);
 		addKeyListener(this);
 		setFocusable(true);
 
 		//Initialisierung Objekte
 		random = new Random();
-		player1 = new Character(5, 5, 10);
-		newPow = new PowerUp(random.nextInt(15,breite-15),random.nextInt(15,laenge-15));
+		player1 = new Character(5, 450, 10);
+		newPow = new PowerUp(random.nextInt(15, width -15),random.nextInt(15, length -15));
 
 		//Laser erschaffen
-		for (int i = 0; i < laseranzahl; i++)
+		for (int i = 0; i < laserNumber; i++)
 		{
 			lasers.add(new Laser());
 			if (i > 0)
 			{
 				//alle anderen Laser
-				Laser.createLaser(lasers.get(i), lasers.get(i-1), random, breite, laenge, player1, laseranzahl);
+				Laser.createLaser(lasers.get(i), lasers.get(i-1), random, width, length, player1, laserNumber);
 			}
 			else
 			{
 				//1. Laser
-				Laser.createLaser(lasers.get(i), random, breite, laenge, player1, laseranzahl);
+				Laser.createLaser(lasers.get(i), random, width, length, player1, laserNumber);
 			}
 		}
 
@@ -78,29 +76,29 @@ public class Lasergame extends JPanel implements ActionListener, KeyListener
 		lasers.clear();
 
 		//Erhöhung Laseranzahl
-		laseranzahl = laseranzahl + 5;
+		laserNumber = laserNumber + 5;
 
 		//Levelerhöhung
 		level++;
 
 		//Player vom rechten zum linken Rand und Player stoppen
-		player1.x = 1;
-		player1.bewegungY = 0;
-		player1.bewegungX = 0;
+		player1.setX(1);
+		player1.setMovementY(0);
+		player1.setMovementX(0);
 
 		//Erstellung Laser mit erhöhter Laseranzahl
-		for (int i = 0; i < laseranzahl; i++)
+		for (int i = 0; i < laserNumber; i++)
 		{
 			lasers.add(new Laser());
 			if (i > 0)
 			{
 				//alle anderen Laser
-				Laser.createLaser(lasers.get(i), lasers.get(i-1), random, breite, laenge, player1, laseranzahl);
+				Laser.createLaser(lasers.get(i), lasers.get(i-1), random, width, length, player1, laserNumber);
 			}
 			else
 			{
 				//1. Laser
-				Laser.createLaser(lasers.get(i), random, breite, laenge, player1, laseranzahl);
+				Laser.createLaser(lasers.get(i), random, width, length, player1, laserNumber);
 			}
 
 		}
@@ -110,18 +108,18 @@ public class Lasergame extends JPanel implements ActionListener, KeyListener
 	{
 		//player1
 		g.setColor(Color.BLACK);
-		g.fill3DRect(player1.x, player1.y, player1.breite, player1.laenge, true);
+		g.fill3DRect(player1.getX(), player1.getY(), player1.getWidth(), player1.getLength(), true);
 		
 		//laser
-		for (int i = 0; i < laseranzahl; i++)
+		for (int i = 0; i < laserNumber; i++)
 		{
 			g.setColor(Color.GREEN);
-			g.fill3DRect(lasers.get(i).x, lasers.get(i).y, lasers.get(i).breite, lasers.get(i).laenge, true);
+			g.fill3DRect(lasers.get(i).getX(), lasers.get(i).getY(), lasers.get(i).getWidth(), lasers.get(i).getLength(), true);
 		}
 
 		//PowerUp
 		g.setColor(Color.CYAN);
-		g.fill3DRect(newPow.getX(), newPow.getY(), newPow.getBreite(), newPow.getLaenge(), true);
+		g.fill3DRect(newPow.getX(), newPow.getY(), newPow.getWidth(), newPow.getLength(), true);
 		
 		//GameOver
 		if (gameOver)
@@ -144,14 +142,19 @@ public class Lasergame extends JPanel implements ActionListener, KeyListener
 		}
 		
 		//Laser passiert
-		g.setColor(Color.MAGENTA);
+		g.setColor(Color.GREEN);
 		g.setFont(new Font("Arial", Font.PLAIN, 16));
-		g.drawString("Passierte Laser: " + laspass1, 10, 20);
+		g.drawString("Passierte Laser: " + laspassstri, 10, 20);
 
 		//Level
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Arial", Font.PLAIN, 16));
 		g.drawString("Level: " + level,10,40);
+
+		//Shield
+		g.setColor(Color.CYAN);
+		g.setFont(new Font("Arial", Font.PLAIN, 16));
+		g.drawString("Shield: " + player1.getShield(),10,60);
 
 	}
 
@@ -165,28 +168,39 @@ public class Lasergame extends JPanel implements ActionListener, KeyListener
 	public void move()
 	{
 		//Playermovement
-		player1.x += player1.bewegungX * player1.speed;
-		player1.y += player1.bewegungY * player1.speed;
+		player1.setX(player1.getX() + player1.getMovementX() * player1.getSpeed());
+		player1.setY(player1.getY()+ player1.getMovementY() * player1.getSpeed());
 
 		//Collisionscheck
-		for (int i = 0; i < laseranzahl; i++)
+		for (int i = 0; i < laserNumber; i++)
 		{
-			if(Laser.collisionLaserBoarder(lasers.get(i), player1, laenge))
+			if(Laser.collisionLaserBoarder(lasers.get(i), player1, length))
 			{
+				if(player1.getShield()>0)
+				{
+					player1.setShield(player1.getShield()-1);
+					player1.setX(5);
+					player1.setY(450);
+					player1.setMovementX(0);
+					player1.setMovementY(0);
+					break;
+				}
+
 				gameOver = true;
 				gameLoop.stop();
 			}
+
 		}
 
 		//Abfrage, wieviele Laser passiert wurden
-		laspass1 = Laser.laserpassed(player1, lasers, laseranzahl, laspass);
+		laspassstri = Laser.laserpassed(player1, lasers, laserNumber, laspass, level);
 
 		//Win
-		if(level == 3 && player1.x >= breite)
+		if(level == 3 && player1.getX() >= width)
 		{
 			win = true;
-			player1 = null;
 			lasers.clear();
+			repaint();
 			PostRequest.request();
 			gameLoop.stop();
 			openNote();
@@ -196,31 +210,31 @@ public class Lasergame extends JPanel implements ActionListener, KeyListener
 		if(PowerUp.collisionPowerUp(newPow,player1))
 		{
 			//Erstellen des neuen Powerups
-			newPow.setX(random.nextInt(15,breite-15));
-			newPow.setY(random.nextInt(15,laenge-15));
+			newPow.setX(random.nextInt(15, width -15));
+			newPow.setY(random.nextInt(15, length -15));
 
-			//Geschwindigkeitserhähung Player
-			player1.speed = player1.speed*2;
+			//Shielderhöhung
+			player1.setShield(player1.getShield()+1);
 		}
 
 		//neues Level erstellen
-		if(player1.x >= breite)
+		if(player1.getX() >= width)
 		{
 			newLevel();
 		}
 
 		//Bewegung der Laser
-		for(int i = 0; i < laseranzahl; i++)
+		for(int i = 0; i < laserNumber; i++)
 		{
-			Laser.movingLaser(lasers.get(i), laenge);
+			Laser.movingLaser(lasers.get(i), length);
 		}
 	}
 
-	private void openNote() //öffnen des nächsten Hinweises
+	public void openNote() //öffnen des nächsten Hinweises
 	{
 		try
 		{
-			Runtime.getRuntime().exec("notepad.exe C:/Users/Rouven von Lübtow/temp/Hinweis2.txt");
+			Runtime.getRuntime().exec("notepad.exe C:/Exit-Game/Lasergame/files/Hinweis2.txt");
 		}
 		catch(IOException e)
 		{
@@ -242,23 +256,23 @@ public class Lasergame extends JPanel implements ActionListener, KeyListener
 	{
 		if (e.getKeyCode() == KeyEvent.VK_UP) //Taste nach oben, Player bewegt sich nach oben
 		{
-			player1.bewegungX = 0;
-			player1.bewegungY = -1;
+			player1.setMovementX(0);
+			player1.setMovementY(-1);
 		}
 		else if (e.getKeyCode() == KeyEvent.VK_DOWN) //Taste nach unten, Player bewegt sich nach unten
 		{
-			player1.bewegungX = 0;
-			player1.bewegungY = 1;
+			player1.setMovementX(0);
+			player1.setMovementY(1);
 		}
 		else if (e.getKeyCode() == KeyEvent.VK_RIGHT) //Taste nach rechts, Player bewegt sich nach rechts
 		{
-			player1.bewegungX = 1;
-			player1.bewegungY = 0;
+			player1.setMovementX(1);
+			player1.setMovementY(0);
 		}
 		else if (e.getKeyCode() == KeyEvent.VK_LEFT) //Taste nach links, Player bewegt sich nach links
 		{
-			player1.bewegungX = -1;
-			player1.bewegungY = 0;
+			player1.setMovementX(-1);
+			player1.setMovementY(0);
 		}
 
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) //Entertaste, Möglichkeit das Spiel zu beenden oder neu zu starten
@@ -293,32 +307,32 @@ public class Lasergame extends JPanel implements ActionListener, KeyListener
 	public void restartGame()
 	{
 		//Spielvariablen zurücksetzen
-		player1.x = 5;
-		player1.y = 5;
-		player1.bewegungX = 0;
-		player1.bewegungY = 0;
-		player1.speed = 10;
+		player1.setX(5);
+		player1.setY(450);
+		player1.setMovementX(0);
+		player1.setMovementY(0);
+		player1.setSpeed(10);
 		level = 1;
-		laseranzahl = 5;
+		laserNumber = 5;
 		win = false;
 		gameOver = false;
 
 		//PowerUp zurücksetzen
 		newPow = null;
-		newPow = new PowerUp(random.nextInt(15,breite-15),random.nextInt(15,laenge-15));
+		newPow = new PowerUp(random.nextInt(15, width -15),random.nextInt(15, length -15));
 
-		for (int i = 0; i < laseranzahl; i++)
+		for (int i = 0; i < laserNumber; i++)
 		{
 			lasers.add(new Laser());
 			if (i > 0)
 			{
 				//alle anderen Laser
-				Laser.createLaser(lasers.get(i), lasers.get(i-1), random, breite, laenge, player1, laseranzahl);
+				Laser.createLaser(lasers.get(i), lasers.get(i-1), random, width, length, player1, laserNumber);
 			}
 			else
 			{
 				//1. Laser
-				Laser.createLaser(lasers.get(i), random, breite, laenge, player1, laseranzahl);
+				Laser.createLaser(lasers.get(i), random, width, length, player1, laserNumber);
 			}
 
 		}
